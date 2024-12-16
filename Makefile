@@ -63,7 +63,53 @@ reset-sphinx:
 	fi
 	@echo "Sphinx documentation reset complete."
 
+.PHONY: choose-license
+choose-license:
+	@printf "\033[95m=======================\033[0m\n"
+	@printf "\033[95mChoose a license type:\033[0m\n"
+	@printf "\033[95m=======================\033[0m\n"
+	@echo "1) GNU-GPL-3"; \
+	echo "2) MIT"; \
+	echo "3) MPL-2.0"; \
+	echo "4) Unlicense"; \
+	echo "5) Copyright (All rights reserved)"; \
+	read -p "Enter your choice [1/2/3/4/5]: " choice; \
+	if [ "$$choice" = "1" ]; then \
+		cp licenses/GNU-GPL-3 LICENSE; \
+		echo "GNU-GPL-3 License copied to LICENSE file."; \
+	elif [ "$$choice" = "2" ]; then \
+		current_year=$$(date +%Y); \
+		read -p "Enter Name: " name; \
+		sed "s/{YEAR}/$$current_year/g; s/{NAME}/$$name/g" licenses/MIT > LICENSE; \
+		echo "MIT License customized and copied to LICENSE file."; \
+	elif [ "$$choice" = "3" ]; then \
+		cp licenses/MPL-2.0 LICENSE; \
+		echo "MPL-2.0 License copied to LICENSE file."; \
+	elif [ "$$choice" = "4" ]; then \
+		cp licenses/Unlicense LICENSE; \
+		echo "Unlicense copied to LICENSE file."; \
+	elif [ "$$choice" = "5" ]; then \
+		current_year=$$(date +%Y); \
+		read -p "Enter Name: " name; \
+		echo "LICENSE" > LICENSE; \
+		echo "Copyright (c) $$current_year, $$name" >> LICENSE; \
+		echo "" >> LICENSE; \
+		echo "All rights reserved." >> LICENSE; \
+		echo "Simple copyright LICENSE file created."; \
+	else \
+		echo "Invalid choice. Exiting."; \
+		exit 1; \
+	fi; \
+	echo ""; \
+	echo "License file created successfully, we don't need the /license directory anymore and it can be removed."; \
+	if [ "$$OSTYPE" = "cygwin" ] || [ "$$OSTYPE" = "msys" ] || [ "$$OS" = "Windows_NT" ]; then \
+		echo -e "Run '\033[32mpowershell -Command \"Remove-Item -Recurse -Force .\\licenses\"\033[0m' to delete the licenses folder."; \
+	else \
+		echo -e "Run '\033[32mrm -rf licenses\033[0m' to delete the licenses folder."; \
+	fi
+
+
 .PHONY: setup-all
-setup-all: create-venv pip setup-pre-commit ci
+setup-all: create-venv pip setup-pre-commit ci choose-license
 	@echo "Python environment setup complete."
 	@echo -e "Run '\033[32mmake reset-sphinx\033[0m' now to reset Sphinx documentation."
