@@ -46,6 +46,24 @@ ci:
 		.venv/bin/python -m pytest; \
 	fi
 
+.PHONY: reset-sphinx
+reset-sphinx:
+	@echo "Resetting Sphinx documentation..."
+	@echo "Clearing contents of /docs directory..."
+	@if [ "$(OS)" = "Windows_NT" ]; then \
+		powershell -Command "Get-ChildItem -Path docs -Recurse | Remove-Item -Recurse -Force | Out-Null"; \
+	else \
+		rm -rf docs/*; \
+	fi
+	@echo "Re-running sphinx-quickstart to set up /docs..."
+	@if [ "$(OS)" = "Windows_NT" ]; then \
+		powershell -Command "sphinx-quickstart docs"; \
+	else \
+		sphinx-quickstart docs; \
+	fi
+	@echo "Sphinx documentation reset complete."
+
 .PHONY: setup-all
 setup-all: create-venv pip setup-pre-commit ci
 	@echo "Python environment setup complete."
+	@echo -e "Run '\033[32mmake reset-sphinx\033[0m' now to reset Sphinx documentation."
