@@ -1,3 +1,5 @@
+[![Continuous Integration](https://github.com/YoloWingPixie/yaptr/actions/workflows/ci.yml/badge.svg)](https://github.com/YoloWingPixie/yaptr/actions/workflows/ci.yml)
+
 # Yaptr
 *Yet Another Python Template Repo*
 
