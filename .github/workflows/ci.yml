@@ -1,0 +1,128 @@
+name: Continuous Integration
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+    actions: write
+    contents: read
+
+jobs:
+  ruff:
+    name: Ruff
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⬇️ Checkout repo
+        uses: actions/checkout@v4
+
+      - name: 🐍 Setup Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: 3.12
+
+      - name: 📦 Install dependencies
+        run: pip install ruff
+
+      - name: 🐕 Run Ruff Check
+        run: ruff check . --fix
+
+      - name: 🐕 Run Ruff Format
+        run: ruff format
+  docs:
+    name: Build Documentation
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⬇️ Checkout repo
+        uses: actions/checkout@v4
+
+      - name: 🐍 Setup Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: 3.12
+
+      - name: 📦 Install dependencies
+        run: pip install -r requirements-dev.txt
+
+      - name: 📚 Build Documentation
+        run: sphinx-build -b html docs/ build/docs
+  test-matrix:
+    name: Test on Multiple OS
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    steps:
+      - name: ⬇️ Checkout repo
+        uses: actions/checkout@v4
+
+      - name: 🐍 Setup Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: 3.12
+
+      - name: 📦 Install dependencies
+        run: pip install -r requirements-dev.txt
+
+      - name: 🔬 Run Tests
+        run: pytest
+  unit-tests:
+    name: Run Unit Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⬇️ Checkout repo
+        uses: actions/checkout@v4
+
+      - name: 🐍 Setup Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: 3.12
+
+      - name: 📦 Install dependencies
+        run: pip install -r requirements-dev.txt
+
+      - name: 🔬 Run Tests
+        run: pytest --cov=your_project tests/
+  integration-tests:
+    name: Run Integration Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⬇️ Checkout repo
+        uses: actions/checkout@v4
+
+      - name: 🐍 Setup Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: 3.12
+
+      - name: 📦 Install dependencies
+        run: pip install -r requirements-dev.txt
+
+      - name: 🧪 Run Integration Tests
+        run: pytest tests/integration/
+  security:
+    name: Dependency Security Checks
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⬇️ Checkout repo
+        uses: actions/checkout@v4
+
+      - name: 🐍 Setup Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: 3.12
+
+      - name: 📦 Install dependencies
+        run: pip install pip-audit
+
+      - name: 🔒 Run Security Audit
+        run: pip-audit

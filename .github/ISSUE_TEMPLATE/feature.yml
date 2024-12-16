@@ -1,0 +1,48 @@
+name: Feature
+description: Suggest new features or outline planned features for milestones..
+labels: [feature]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Description
+        Provide a clear and concise description of the feature.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Feature Description
+      description: Describe the feature in detail.
+      placeholder: Provide a detailed description of the requested feature.
+    validations:
+      required: true
+
+  - type: markdown
+    attributes:
+      value: |
+        ## Design Considerations
+        Describe the design or architectural thoughts relevant to this task. Include considerations such as performance, scalability, dependencies, and potential risks.
+
+  - type: textarea
+    id: design_considerations
+    attributes:
+      label: Design/Architecture Details
+      description: Provide thoughts on the design or architecture for implementing this feature.
+      placeholder: Add any relevant details about the design or architecture.
+    validations:
+      required: true
+
+  - type: markdown
+    attributes:
+      value: |
+        ## Acceptance Criteria
+        Define the conditions that must be met for this feature to be considered complete. Use bullet points for clarity.
+
+  - type: textarea
+    id: acceptance_criteria
+    attributes:
+      label: Acceptance Criteria
+      description: List the acceptance criteria for this feature.
+      placeholder: Provide the criteria that must be met for this feature.
+    validations:
+      required: true
