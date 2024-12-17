@@ -57,3 +57,7 @@ Run the following command to reset the Sphinx documentation:
 ```bash
 make reset-sphinx
 ```
+---
+
+## Changelog
+The changelog for the project is based on [Keep a Changelog](https://keepachangelog.com/)
